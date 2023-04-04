@@ -24,6 +24,13 @@ def open_local_image(file_path):
 
 def extract_metadata(exif_data, img):
     metadata = {}
+
+    if hasattr(img, 'size'):
+        width, height = img.size
+        metadata['Image Size'] = f"{width} x {height}"
+    else:
+        metadata['Image Size'] = 'unknown'
+
     if 'FNumber' in exif_data:
         f_stop = exif_data['FNumber']
         if isinstance(f_stop, tuple):
@@ -50,18 +57,12 @@ def extract_metadata(exif_data, img):
     else:
         metadata['Shutter Speed'] = 'unknown'
 
-    if hasattr(img, 'size'):
-        width, height = img.size
-        metadata['Image Size'] = f"{width} x {height}"
-    else:
-        metadata['Image Size'] = 'unknown'
-
     return metadata
 
 
 def get_metadata(img):
     exif_data = {}
-    exif = img.getexif()
+    exif = img._getexif()
     if exif:
         for tag, value in exif.items():
             if tag in ExifTags.TAGS:
