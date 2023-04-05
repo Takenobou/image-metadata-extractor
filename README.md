@@ -14,9 +14,11 @@ To run this script, you need to have the following dependencies installed:
 
 To use this script, run the following command from the command line:
 
-`python image-metadata-extractor.py file_path_or_url`
+`python image-metadata-extractor.py file_path_or_url [-j | --json]`
 
 Replace `file_path_or_url` with the file path or URL of the image file you want to extract metadata from. The script will automatically determine whether the file path is a local file or a remote URL.
+
+The `-j` or `--json` flag is optional. If you include it, the script will export the metadata as a JSON file in the same directory as the image file.
 
 ### Example
 
@@ -28,14 +30,21 @@ To extract metadata from a remote image file, run the following command:
 
 `python image-metadata-extractor.py https://example.com/image.jpg`
 
+To extract metadata from a remote image file and export the metadata as a JSON file, run the following command:
+
+`python image-metadata-extractor.py https://example.com/image.jpg -j`
+
 ## Output
 
 The script outputs the following metadata for the image:
 
+- Camera Make
+- Camera Model
 - Image Size
 - F-stop
 - Focal Length
 - Shutter Speed
+- ISO
 
 The metadata is printed to the console in the following format:
 
