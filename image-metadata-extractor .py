@@ -83,7 +83,7 @@ def extract_metadata(exif_data, img):
         f_stop = exif_data['FNumber']
         if isinstance(f_stop, tuple):
             f_stop = f_stop[0] / f_stop[1]
-        metadata['F-stop'] = f_stop
+        metadata['F-stop'] = str(f_stop)
     else:
         metadata['F-stop'] = 'unknown'
 
@@ -92,7 +92,7 @@ def extract_metadata(exif_data, img):
         focal_length = exif_data['FocalLength']
         if isinstance(focal_length, tuple):
             focal_length = focal_length[0] / focal_length[1]
-        metadata['Focal Length'] = focal_length
+        metadata['Focal Length'] = str(focal_length)
     else:
         metadata['Focal Length'] = 'unknown'
 
@@ -109,7 +109,7 @@ def extract_metadata(exif_data, img):
 
     # Extract ISO
     if 'ISOSpeedRatings' in exif_data:
-        metadata['ISO'] = exif_data['ISOSpeedRatings']
+        metadata['ISO'] = str(exif_data['ISOSpeedRatings'])
     else:
         metadata['ISO'] = 'unknown'
 
@@ -141,6 +141,18 @@ def print_metadata(metadata):
         print(f"{key}: {value}")
 
 
+def export_metadata(metadata):
+    """
+    Exports the metadata as a JSON file.
+    :param dict metadata: A dictionary containing the metadata to be exported.
+    """
+    import json
+
+    with open('metadata.json', 'w') as outfile:
+        json.dump(metadata, outfile, indent=4)
+    print("Metadata exported as JSON to metadata.json")
+
+
 def parse_args():
     """
     Parses command-line arguments passed to the script using the argparse module.
@@ -150,6 +162,7 @@ def parse_args():
 
     parser = argparse.ArgumentParser(description='Extract metadata from an image file.')
     parser.add_argument('file_path', help='Path to the image file (local file path or URL)')
+    parser.add_argument('-j', '--json', action='store_true', help='Export metadata as JSON')
     return parser.parse_args()
 
 
@@ -165,7 +178,10 @@ def main():
     try:
         image = get_image(file_path)
         metadata = get_metadata(image)
-        print_metadata(metadata)
+        if args.json:
+            export_metadata(metadata)
+        else:
+            print_metadata(metadata)
     except ValueError as e:
         print(f"Error: {e}")
 
